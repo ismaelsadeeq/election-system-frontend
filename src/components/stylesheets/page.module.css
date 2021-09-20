@@ -59,10 +59,24 @@
 .heading {
   font-weight: 350;
 }
-.result {
-  padding-top: 1em;
-  display: flex;
-  margin: 0 auto;
-  width: 60%;
-  text-align: center;
+
+@media (min-width:900px){
+  .heading {
+    padding-top: 2em;
+  }
+  .result {
+    padding-top: .5em;
+    display: flex;
+    margin: 0 auto;
+    width: 83%;
+    text-align: center;
+  }
+}
+@media (max-width:900px){
+  .result {
+    padding-top: .5em;
+    display: flex;
+    margin: 0 auto;
+    width: 90%;
+  }
 }

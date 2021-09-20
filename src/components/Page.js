@@ -58,14 +58,31 @@ function Page() {
           </div>:null
         }
         {
-          notPublished?<div>
+          notPublished ? <div>
           <h4 className={styles.result}>{data.name} is currently going on
             Results will be published when its over!!!</h4>
           </div>:null
         }
         {
-          published? <div>
-            <p className={styles.result}>Election is concluded</p>
+          published ? <div>
+            <h4 className={styles.result}>{data.name}</h4>
+            <p className={styles.result}>{data.date}</p>
+            {
+              data.parties.map((payload)=>{
+                let contestant = JSON.parse(payload.contestantName);
+                let objectKeys = Object.keys(contestant);
+                return <div>
+                <h4 className={styles.result}>{payload.name}</h4>
+                {objectKeys.map((payload)=>{
+                  return <div>
+                    <p className={styles.result}>{payload}: {contestant[`${payload}`]}</p>
+                  </div>
+                })
+                }
+                <p className={styles.result}>Votes: {payload.votes}</p>
+                </div>
+              })
+            }
             </div>:null
         }
       </div>
