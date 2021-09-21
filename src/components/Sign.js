@@ -12,7 +12,7 @@ function Sign() {
   const [info,setInfo] = useState({
     "PUNumber":"",
     "password":"",
-    "firsName":"",
+    "firstName":"",
     "lastName":"",
     "confirmPassword":""
   })
@@ -35,30 +35,24 @@ function Sign() {
         setLoading(false)
         alert("something went wrong");
         setSignUp(false)
-        setSignUp(true)
+        setSignIn(true)
       }
-      if(response.data.message === 'data is required'){
-        history.push('/sign-in');
+      if(response.data.message === 'account already exist sign in'){
+        alert("you have an account sign-in")
+        setSignUp(false)
+        setSignIn(true)
       }
-      if(response.data.message === 'Incorrect passsword'){
-        setMessage('Incorrect Password')
-        setLoading(false)
+      if(response.data.message === 'polling unit doesnt exist'){
+        alert("polling unit doesnt exist")
         setError(true)
       }
-      if(response.data){
-        let token = response.data.token;
-        let user = response.data.data;
-        localStorage.setItem('token',JSON.stringify(token));
-        localStorage.setItem('user',JSON.stringify(user));
-        if(user.isAdmin === true){
-          history.push('/admin-dashboard');
-        }else{
-          history.push('/dashboard');
-        }
+      if(response.data.message === 'Account successfully created'){
+        alert("account created sign in")
+        setSignIn(true)
+        setSignUp(false)
       }
     })
     .catch(error=>{
-      setLoading(false)
       console.log(error);
     })
   }
@@ -72,7 +66,6 @@ function Sign() {
     }).then(response=>{
       console.log(response.data);
       if(response.data.message === 'No account found'){
-        setLoading(false)
         setError(false)
         alert("no account with polling unit number sign up")
         setSignIn(false)
@@ -80,7 +73,6 @@ function Sign() {
       }
       if(response.data.message === 'Incorrect passsword'){
         setMessage('Incorrect Password')
-        setLoading(false)
         setError(true)
       }
       if(response.data){
@@ -96,7 +88,6 @@ function Sign() {
       }
     })
     .catch(error=>{
-      setLoading(false)
       console.log(error);
     })
   }
@@ -165,7 +156,7 @@ function Sign() {
                   </div>
                   <div className={styles.field}>
                   <label >lastname</label>
-                    <input   name="lastName" type="text" placeholder="last name" value={info.firstName} onChange={(e)=>{changeHandler(e)}} required></input>
+                    <input   name="lastName" type="text" placeholder="last name" value={info.lastName} onChange={(e)=>{changeHandler(e)}} required></input>
                   </div>
                   <div className={styles.field}>
                     <label >password</label>
@@ -173,16 +164,16 @@ function Sign() {
                   </div>
                   <div className={styles.field}>
                     <label >confirm password</label>
-                    <input name="password" type="confirmPassword" placeholder="confirm password" value={info.confirmPassword} onChange={(e)=>{changeHandler(e)}} required></input>
+                    <input name="confirmPassword" type="password" placeholder="confirm password" value={info.confirmPassword} onChange={(e)=>{changeHandler(e)}} required></input>
                   </div>
-                  <button type="submit" className="button btn-success" >Sign in</button>
+                  <button type="submit" className="button btn-success" >Sign up</button>
                   {
                     error?<p>{message}</p>:null
                   }
-                  <p className={styles.link} onClick={()=>{
-                    setSignIn(false)
-                    setSignUp(true);
-                  }}>Sign Up</p>
+                    <a className={styles.link} onClick={()=>{
+                    setSignIn(true)
+                    setSignUp(false);
+                  }}>Sign in</a>
                   <div>
                    <p className={styles.formButtomText}>You are an Admin? <span ><a  href='/sign-admin'>Sign in as admin</a></span></p>
                   </div>
@@ -193,7 +184,7 @@ function Sign() {
 
           }
         </div>
-      </div>
+      </div> 
     </div>
   )
 }
