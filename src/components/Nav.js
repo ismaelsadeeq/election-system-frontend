@@ -27,6 +27,9 @@ function Nav() {
       </div>
       <div className={styles.linksContainer} ref={linksContainerRef}>
         <ul className={styles.links} ref={linksRef}>
+        <li>
+            <a href='/'>home</a>
+          </li>
           <li>
             <a href='/sign-in'>Sign in</a>
           </li>
