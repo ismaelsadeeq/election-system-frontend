@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import voting from '../assets/images/voting.jpg'
 import { useHistory } from "react-router-dom";
 import Nav from './Nav'
 import styles from './stylesheets/authStyle.module.css'
