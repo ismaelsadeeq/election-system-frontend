@@ -17,13 +17,11 @@ function Sign() {
   })
   const [signUp,setSignUp] = useState(false);
   const [signIn,setSignIn] = useState(true);
-  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState(false);
 
   function signUpSubmitHandler (e) {
     e.preventDefault();
-    setLoading(true);
     axios({
       method: 'post',
       url: `${url}/auth/register`,
@@ -31,7 +29,6 @@ function Sign() {
     }).then(response=>{
       console.log(response.data);
       if(response.data.message === 'data is required'){
-        setLoading(false)
         alert("something went wrong");
         setSignUp(false)
         setSignIn(true)
@@ -57,7 +54,6 @@ function Sign() {
   }
   function submitHandler (e) {
     e.preventDefault();
-    setLoading(true);
     axios({
       method: 'post',
       url: `${url}/auth/login`,

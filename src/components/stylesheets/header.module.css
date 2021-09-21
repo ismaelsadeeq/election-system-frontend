@@ -1,0 +1,26 @@
+.header {
+  height: 10vh;
+  display: flex;
+  justify-content: space-between;
+  box-shadow:2px 2px 3px #cccccc;
+
+}
+.coat {
+  padding: .5em;
+  width: 100px;
+}
+@media (min-width:900px){
+  .inec {
+    padding: 1em;
+  }
+}
+@media (max-width:900px){
+  .inec {
+    padding: 1em;
+    padding-top: 2em;
+  }
+  .coat {
+    padding: .5em;
+    width: 150px;
+  }
+}
