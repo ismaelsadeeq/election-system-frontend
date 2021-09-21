@@ -7,7 +7,6 @@ import {url} from './url'
 
 function SignAdmin() {
   let history = useHistory();
-
   const [info,setInfo] = useState({
     "email":"",
     "password":"",
