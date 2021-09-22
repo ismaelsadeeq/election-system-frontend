@@ -29,7 +29,6 @@ function AdminDashboard() {
   const [party,setParty] = useState(false);
   const [candidate,setCandidate] = useState(false);
   const [info,setInfo] = useState(data)
-  const [partyDisplay,setPartyDisplay] = useState([])
   const [candidateDisplay,setCandidateDisplay] = useState([])
   const linksContainerRef = useRef(null);
   const linksRef = useRef(null);
@@ -87,6 +86,11 @@ function AdminDashboard() {
         localStorage.removeItem("user");
       }
       if(response.data.message ==="election deleted"){
+        setParty(false)
+        setCandidate(false)
+        setCandidateDisplay([])
+        data.name = ''
+        setInfo(data)
         getElection()
       }
     })
@@ -216,18 +220,22 @@ function AdminDashboard() {
         return alert("party already existed");
       }
       if(response.data.message === "party successfully created"){
-        let parties  = partyDisplay;
-        parties.push(info.partyName);
-        let candidates = candidateDisplay;
-        candidates.push(info.contestantName);
-        setPartyDisplay(parties)
-        setCandidateDisplay(candidates)
+        let parties  = candidateDisplay;
+        parties.push(info.contestantName);
+        setCandidateDisplay(parties)
         setCandidate(false)
+        let name = info.name
+        data.name = name
+        setInfo(data)
       }
     })
     .catch(error=>{
       console.log(error);
     })
+  }
+  const done = async(e)=>{
+    e.preventDefault();
+    getElection()
   }
   useEffect(() => {
     const linksHeight = linksRef.current.getBoundingClientRect().height;
@@ -324,7 +332,17 @@ function AdminDashboard() {
                 <div>
                 <h3 className={style.field}>{info.name}</h3>
                 {
-                  
+                  candidateDisplay.map((payload)=>{
+                  let objectKeys = Object.keys(payload);                 
+                  return <div>
+                  {objectKeys.map((payload2)=>{
+                    return <div>
+                      <p className={style.result}>{payload2} {payload[`${payload2}`]}</p>
+                    </div>
+                  })
+                  }
+                  </div>
+                })
                 }
                 {
                   candidate?
@@ -361,7 +379,7 @@ function AdminDashboard() {
                   {
                     candidateDisplay.length > 1?
                     <div>
-                  <button className={style.btnn} onClick={(e)=>{createParty(e)}}>Finish</button>
+                  <button className={style.btnn} onClick={(e)=>{done(e)}}>Finish</button>
                   </div>
                   :null
                   }
