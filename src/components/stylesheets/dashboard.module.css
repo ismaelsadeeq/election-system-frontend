@@ -1,0 +1,61 @@
+.election {
+  display: flex;
+  z-index: -1;
+  position: absolute;
+  top: 5em;
+  margin:0 auto;
+  justify-content: space-around;
+}
+.field input {
+  width: 100%;
+  padding: .5em;
+}
+.field p {
+  width: 100%;
+  padding: .5em;
+}
+@media (min-width:900px){
+  .election {
+    padding-left: 7em;
+  }
+  .btn {
+    margin-left: 3em;
+    margin-bottom: 1em;
+    padding: .5em;
+  }
+  .btnn {
+    width: 100%;
+    margin-bottom: 1em;
+    padding: .5em;
+  }
+  .field {
+    padding-top: .5em;
+    padding-bottom: .5em;
+  }
+}
+
+@media (max-width:900px){
+  .election {
+    width: 100%;
+    padding-left: 2em;
+    flex-direction: column;
+  }
+  .btn {
+    margin-top: .5em;
+    margin-bottom: 1em;
+    padding: .5em;
+  }
+  .btnn {
+    width: 50%;
+    margin-top: .5em;
+    margin-bottom: 1em;
+    padding: .5em;
+  }
+  .field {
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
+  .field input {
+    width: 50%;
+  }
+}
