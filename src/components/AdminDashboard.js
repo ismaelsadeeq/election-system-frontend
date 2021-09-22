@@ -14,6 +14,7 @@ function AdminDashboard() {
     setToken
   } = useGlobalContext();
   const [showLinks, setShowLinks] = useState(false);
+  const [electionStatus,setElectionStatus] = useState(false)
   const [election,setElection] = useState(undefined)
   const linksContainerRef = useRef(null);
   const linksRef = useRef(null);
@@ -38,7 +39,21 @@ function AdminDashboard() {
         Authorization:`Bearer ${token}`
       }
     }).then(response =>{
-      console.log(response.data)
+      console.log(response.data);
+      if(response.data.message === "user is not an admin"){
+        alert("unauthorize")
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+      }
+      if(response.data.message ==="No election at the moment"){
+        setElection(undefined);
+      }
+      if(response.data.message ==="completed"){
+        setElection(response.data.data)
+        let electionStatus = parseInt(response.data.data.status)
+        setElectionStatus(electionStatus)
+      }
+      
     })
     .catch(error=>{
       console.log(error);
@@ -53,33 +68,56 @@ function AdminDashboard() {
     }
     setTheToken()
     getElection()
-  }, [showLinks,token,election]);
+  }, [showLinks,token]);
   return (
     <div>
       <nav className={styles.height}>
-      <div className={styles.navCenter}>
-        <div className={`${styles.navHeader}`}>
-          INEC ADAMAWA STATE
-          <button className={styles.navToggle} onClick={toggleLinks}>
-            <FaBars />
-          </button>
-        </div>
+        <div className={styles.navCenter}>
+          <div className={`${styles.navHeader}`}>
+            INEC ADAMAWA STATE
+            <button className={styles.navToggle} onClick={toggleLinks}>
+              <FaBars />
+            </button>
+          </div>
         <div className={styles.linksContainer} ref={linksContainerRef}>
           <ul className={styles.links} ref={linksRef}>
-          <li>
-              <a href='/admin-dashboard'>home</a>
-            </li>
-            <li>
-              <a href='/reg-pu'>polling unit</a>
-            </li>
-            <li>
-              <a href='/sign-in' onClick={logOut}>logout</a>
-            </li>
-          </ul>
+              <li>
+                <a href='/admin-dashboard'>home</a>
+              </li>
+              <li>
+                <a href='/reg-pu'>polling unit</a>
+              </li>
+              <li>
+                <a href='/sign-in' onClick={logOut}>logout</a>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-    </nav>
-  </div>
+      </nav>
+      {electionStatus?
+        <div className={styles.election}>
+          <h4 className={styles.result}>{election.name}</h4>
+            <p className={styles.result}>{election.date}</p>
+            {
+              election.parties.map((payload)=>{
+                let contestant = JSON.parse(payload.contestantName);
+                let objectKeys = Object.keys(contestant);
+                return <div>
+                <h4 className={styles.result}>{payload.name}</h4>
+                {objectKeys.map((payload)=>{
+                  return <div>
+                    <p className={styles.result}>{payload}: {contestant[`${payload}`]}</p>
+                  </div>
+                })
+                }
+                <p className={styles.result}>Votes: {payload.votes}</p>
+                </div>
+              })
+            }
+        </div>:null
+
+      }
+    </div>
   )
 }
 
