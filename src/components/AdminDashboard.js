@@ -10,7 +10,13 @@ import axios from 'axios';
 
 function AdminDashboard() {
   let data ={
-    name:''
+    name:'',
+    partyName:'',
+    contestantName:'',
+    titleName:'',
+    topName:'',
+    bottomTitleName:'',
+    bottomName:''
   }
   let history = useHistory();
   const {
@@ -21,7 +27,10 @@ function AdminDashboard() {
   const [electionStatus,setElectionStatus] = useState(false)
   const [election,setElection] = useState(undefined)
   const [party,setParty] = useState(false);
+  const [candidate,setCandidate] = useState(false);
   const [info,setInfo] = useState(data)
+  const [partyDisplay,setPartyDisplay] = useState([])
+  const [candidateDisplay,setCandidateDisplay] = useState([])
   const linksContainerRef = useRef(null);
   const linksRef = useRef(null);
   const toggleLinks = () => {
@@ -138,6 +147,88 @@ function AdminDashboard() {
       [property] : value,
     }))  
   }
+  const createElection = (e)=>{
+    e.preventDefault()
+    if(info.name.length<=0){
+      return alert("please enter election name")
+    }
+    axios({
+      method: 'POST',
+      url: `${url}/election/create`,
+      headers:{
+        Authorization:`Bearer ${token}`
+      },
+      data:info
+    }).then(response =>{
+      if(response.data.message === "user is not an admin"){
+        alert("unauthorize")
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+      }
+      if(response.data.message === "there is an election currently going on"){
+        alert("something went wrong")
+        history.push("/admin-dashboard")
+      }
+      if(response.data.message === "data is required"){
+        alert("empty data sent")
+        history.push("/admin-dashboard")
+      }
+      if(response.data.message ==="Election successfully created"){
+        setParty(true)
+      }
+    })
+    .catch(error=>{
+      console.log(error);
+    })
+  }
+  const createParty = (e)=>{
+    e.preventDefault()
+    setCandidate(true)
+  }
+  const created = async(e)=>{
+    e.preventDefault();
+    let fistTitle = info.titleName;
+    let secondTitle = info.bottomTitleName;
+    let obj = {}
+    obj[fistTitle] = info.topName;
+    obj[secondTitle] = info.bottomName;
+    let secondObj = info
+    secondObj.contestantName = obj;
+    setInfo(secondObj)
+    axios({
+      method: 'POST',
+      url: `${url}/election/create/party`,
+      headers:{
+        Authorization:`Bearer ${token}`
+      },
+      data:info
+    }).then(response =>{
+      if(response.data.message === "user is not an admin"){
+        alert("unauthorize")
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+      }
+      if(response.data.message === "data is required"){
+        alert("something went wrong")
+        history.push("/admin-dashboard");
+      }
+      if(response.data.message === "party exist"){
+        return alert("party already existed");
+      }
+      if(response.data.message === "party successfully created"){
+        let parties  = partyDisplay;
+        parties.push(info.partyName);
+        let candidates = candidateDisplay;
+        candidates.push(info.contestantName);
+        setPartyDisplay(parties)
+        setCandidateDisplay(candidates)
+        setCandidate(false)
+      }
+    })
+    .catch(error=>{
+      console.log(error);
+    })
+  }
   useEffect(() => {
     const linksHeight = linksRef.current.getBoundingClientRect().height;
     if (showLinks) {
@@ -217,17 +308,69 @@ function AdminDashboard() {
         </div>:
           <div className={style.election}>
             <div>
-              <h3>Create Election</h3>
-              <form>
-              <div className={style.field}>
-               <p>Name</p>
-                <input name="name" type="text" placeholder="Election Name" value={info.name} onChange={(e)=>{changeHandler(e)}} required></input>
-                </div>
+              {!party?
                 <div>
-                <button className={style.btnn}>Add party</button>
+                <h3>Create Election</h3>
+                <form>
+                <div className={style.field}>
+                 <label>Name</label>
+                  <input name="name" type="text" placeholder="Election Name" value={info.name} onChange={(e)=>{changeHandler(e)}} required></input>
+                  </div>
+                  <div>
+                  </div>
+                  <button type="submit" className={style.btnn} onClick={(e)=>{createElection(e)}}>Create</button>
+                </form>
+                </div>:
+                <div>
+                <h3 className={style.field}>{info.name}</h3>
+                {
+                  
+                }
+                {
+                  candidate?
+                  <div>
+                  <div className={style.field}>
+                    <label>Party Name</label>
+                    <input name="partyName" type="text" placeholder="Party" value={info.partyName} onChange={(e)=>{changeHandler(e)}} required></input>
+                  </div>
+                  <div className={style.field}>
+                    <label>Title Name</label>
+                    <input name="titleName" type="text" placeholder="Title" value={info.titleName} onChange={(e)=>{changeHandler(e)}} required></input>
+                    </div>
+                    <div className={style.field}>
+                    <label>Contestant Name</label>
+                    <input name="topName" type="text" placeholder="Contestant" value={info.topName} onChange={(e)=>{changeHandler(e)}} required></input>
+                    </div>
+                    <div className={style.field}>
+                    <label>Assistant Title</label>
+                    <input name="bottomTitleName" type="text" placeholder="Assistant Title" value={info.bottomTitleName} onChange={(e)=>{changeHandler(e)}} ></input>
+                    </div>
+                    <div className={style.field}>
+                    <label className={style.kaki}>Assistant Name</label>
+                    <input name="bottomName" type="text" placeholder="Assistant Contestant" value={info.bottomName} onChange={(e)=>{changeHandler(e)}} ></input>
+                    </div>
+                    <div className={style.field}>
+                    <button type="submit" className={style.btnn} onClick={(e)=>{created(e)}}>Create Party</button>
+                    </div>
+                  </div>
+                  :null
+                }
+                {!candidate?
+                <div>
+                  <button className={style.btnn} onClick={(e)=>{createParty(e)}}>Add party</button>
+                  {
+                    candidateDisplay.length > 1?
+                    <div>
+                  <button className={style.btnn} onClick={(e)=>{createParty(e)}}>Finish</button>
+                  </div>
+                  :null
+                  }
                 </div>
-                <button type="submit" className={style.btnn}>Create</button>
-              </form>
+                  :null
+                }
+                </div>
+              }
+              
             </div>
           </div>
       }

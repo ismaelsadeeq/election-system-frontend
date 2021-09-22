@@ -52,10 +52,13 @@
     padding: .5em;
   }
   .field {
-    padding-top: 1em;
+    /* padding-top: 1em; */
     padding-bottom: 1em;
   }
   .field input {
     width: 50%;
+  }
+  .field label {
+    display: block;
   }
 }
