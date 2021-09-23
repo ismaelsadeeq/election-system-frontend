@@ -1,0 +1,77 @@
+.container {
+  display: flex;
+  z-index: -1;
+  position: absolute;
+  top: 5em;
+  width: auto;
+  margin:0 auto;
+  justify-content: space-between;
+  flex-direction: column;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.field input {
+  width: 100%;
+  padding: .5em;
+}
+
+@media (min-width:900px){
+  .container {
+    margin-left:2em;
+  }
+  .field {
+    padding-top: .5em;
+    padding-bottom: .5em;
+  }
+  .btn {
+    margin-top: 2em;
+    margin-right: 3em;
+    margin-bottom: 1em;
+    padding: .5em;
+  }
+  .btnn {
+    width: 100%;
+    margin-bottom: 1em;
+    padding: .5em;
+  }
+  .field input {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    padding: .7em;
+    width: 100%;
+  }
+}
+
+@media (max-width:900px){
+  .container {
+    margin-left: 2em;
+    width: 90%;
+  }
+  .field {
+    padding-bottom: 1em;
+  }
+  .field input {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    padding-bottom: 1em;
+    width: 70%;
+  }
+  .field label {
+    display: block;
+  }
+  .btnn {
+    width: 70%;
+    margin-top: .5em;
+    margin-bottom: 1em;
+    padding: .5em;
+  }
+  .btn {
+    margin-right: 2em;
+    margin-top: .5em;
+    margin-bottom: 1em;
+    padding: .5em;
+  }
+}
