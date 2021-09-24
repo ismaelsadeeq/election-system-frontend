@@ -11,7 +11,10 @@ import helpers from './helpers';
 function RegisterPu() {
   const data = {
     name:'',
-    puName:''
+    puName:'',
+    pollingUnitName:'',
+    pollingUnitNumber:'',
+    voters:''
   }
   let history = useHistory();
   const {
@@ -25,10 +28,12 @@ function RegisterPu() {
   const [lga,setLga] = useState(undefined);
   const [count,setCount] =  useState(0)
   const [pu,setPu] = useState(false)
+  const [searchedPu,setSeachedPu] = useState(undefined)
   const [createPu,setCreatePu] = useState(false)
   const [searchPu,setSearchPu] = useState(false)
   const [puData,setPuData] = useState([])
   const [limit,setLimit] = useState(false)
+  const [id,setId] = useState('');
   const linksContainerRef = useRef(null);
   const linksRef = useRef(null);
   const toggleLinks = () => {
@@ -65,6 +70,7 @@ function RegisterPu() {
       }
       if(response.data.message ==="successful"){
         setLga(response.data.data);
+        setId(response.data.data.id)
         setSearch(false)
         setDisplayLga(true)
       }
@@ -104,13 +110,15 @@ function RegisterPu() {
     setInfo(data)
     setSearch(true)
   }
-  const getBack = ()=>{
+  const getBack = (e)=>{
+    e.preventDefault()
     setPu(false)
+    setCreatePu(undefined)
     setSearchPu(false)
+    setSeachedPu(false)
     setDisplayLga(true)
   }
   const searchForPu =  async(e)=>{
-    e.preventDefault()
     e.preventDefault()
     axios({
       method: 'POST',
@@ -120,7 +128,7 @@ function RegisterPu() {
       },
       data:info
     }).then(response =>{
-      console.log(response.data)
+      console.log(response.data);
       if(response.data.message === "pu name is required"){
         info.name = undefined;
         setInfo(info)
@@ -130,7 +138,10 @@ function RegisterPu() {
         return alert("polling unit does not exist")
       }
       if(response.data.message ==="successful"){
-        console.log(response.data)
+        setSearchPu(false)
+        info.puName = ''
+        setInfo(info)
+        setSeachedPu(response.data.data)
       }
     })
     .catch(error=>{
@@ -219,6 +230,34 @@ function RegisterPu() {
       console.log(error);
     })
   }
+  const createAPu = async(e)=>{
+    e.preventDefault()
+    axios({
+      method: 'POST',
+      url: `${url}/utilities/create-pu/${id}`,
+      headers:{
+        Authorization:`Bearer ${token}`
+      },
+      data:info
+    }).then(response =>{
+      console.log(response.data);
+      if(response.data.message === "data is required"){
+        alert("something went wrong")
+        return getBack(e)
+      }
+      if(response.data.message ==="something went wrong"){
+        alert("something went wrong")
+        return getBack(e)
+      }
+      if(response.data.message ==="polling unit successfully created"){
+        alert("polling unit created")
+        return getBack(e)
+      }
+    })
+    .catch(error=>{
+      console.log(error);
+    })
+  }
   function changeHandler (e){
     const property = e.target.name;
     const value = e.target.value;
@@ -292,6 +331,7 @@ function RegisterPu() {
               <div>
               <button className={style.btn} onClick={()=>{
                 setCreatePu(true)
+                setPu(false)
                 }}>Create Polling Unit</button>
             </div>
             {
@@ -303,7 +343,7 @@ function RegisterPu() {
               {
                 puData.map((payload)=>{
                   return <div>
-                    <p>Name: {payload.name} </p><p>Number: {payload.puNumber}</p><p><p>Polling Units</p>Voters: {payload.voters}</p>
+                    <p>Name: {payload.name} </p><p>Number: {payload.puNumber}</p><p>Voters: {payload.voters}</p>
                     <button className={style.btn} onClick={(e)=>{deletePu(e,payload.id)}}>Delete</button>
                   </div>
                 })
@@ -327,6 +367,38 @@ function RegisterPu() {
               <label>Polling Unit</label>
               <input className={style.inpu} name="puName" type="text" placeholder="Enter polling unit Name" value={info.puName}  onChange={(e)=>{changeHandler(e)}}  required/><button className={style.btnn} onClick={(e)=>{searchForPu(e)}}>Search</button>
               </div>
+            </form>
+          </div>
+          :null
+        }
+        {
+          searchedPu?
+            <div>
+              <button className={style.btn} onClick={(e)=>{getBack(e)}}>Back</button>
+                    <p>Name: {searchedPu.name} </p><p>Number: {searchedPu.puNumber}</p><p>Voters: {searchedPu.voters}</p>
+                    <button className={style.btn} onClick={(e)=>{deletePu(e,searchedPu.id)}}>Delete</button>
+                  </div>
+          :null
+        }
+        {
+          createPu ?
+          <div>
+            <button className={style.btn} onClick={(e)=>{getBack(e)}}>Back</button>
+            <form onSubmit={(e)=>{createAPu(e)}}>
+              <h3>Create A polling Unit</h3>
+              <div className={style.field}>
+              <label>Polling Unit Name</label>
+              <input className={style.inpu} name="pollingUnitName" type="text" placeholder="Enter polling unit name" value={info.pollingUnitName}  onChange={(e)=>{changeHandler(e)}}  required/>
+              </div>
+              <div className={style.field}>
+              <label>Polling Unit Number</label>
+              <input className={style.inpu} name="pollingUnitNumber" type="text" placeholder="Enter polling unit number" value={info.pollingUnitNumber}  onChange={(e)=>{changeHandler(e)}}  required/>
+              </div>
+              <div className={style.field}>
+              <label>Voters</label>
+              <input className={style.inpu} name="voters" type="text" placeholder="Enter Number of voters" value={info.voters}  onChange={(e)=>{changeHandler(e)}}  required/>
+              </div>
+              <button className={style.btnn} type="submit">Create</button>
             </form>
           </div>
           :null
