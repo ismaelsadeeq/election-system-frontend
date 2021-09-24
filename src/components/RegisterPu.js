@@ -10,7 +10,8 @@ import helpers from './helpers';
 
 function RegisterPu() {
   const data = {
-    name:''
+    name:'',
+    puName:''
   }
   let history = useHistory();
   const {
@@ -20,9 +21,14 @@ function RegisterPu() {
   const [showLinks, setShowLinks] = useState(false);
   const [search,setSearch] = useState(true)
   const [info,setInfo] = useState(data)
+  const [displayLga,setDisplayLga] = useState(false)
   const [lga,setLga] = useState(undefined);
   const [count,setCount] =  useState(0)
   const [pu,setPu] = useState(false)
+  const [createPu,setCreatePu] = useState(false)
+  const [searchPu,setSearchPu] = useState(false)
+  const [puData,setPuData] = useState([])
+  const [limit,setLimit] = useState(false)
   const linksContainerRef = useRef(null);
   const linksRef = useRef(null);
   const toggleLinks = () => {
@@ -60,6 +66,7 @@ function RegisterPu() {
       if(response.data.message ==="successful"){
         setLga(response.data.data);
         setSearch(false)
+        setDisplayLga(true)
       }
     })
     .catch(error=>{
@@ -74,20 +81,17 @@ function RegisterPu() {
       headers:{
         Authorization:`Bearer ${token}`
       },
-      data:info
     }).then(response =>{
       console.log(response.data);
-      if(response.data.message === "lga name is required"){
-        info.name = undefined;
-        return alert("lga name is required")
-      }
-      if(response.data.message ==="lga doest not exist"){
-        info.name = undefined;
-        return alert("local government does not exist")
+      if(response.data.message === "No Polling units"){
+        setPuData(response.data.data)
+        setDisplayLga(false)
+        return setPu(true)
       }
       if(response.data.message ==="successful"){
-        setLga(response.data.data);
-        setSearch(false)
+        setPuData(response.data.data)
+        setDisplayLga(false)
+        return setPu(true);
       }
     })
     .catch(error=>{
@@ -95,11 +99,125 @@ function RegisterPu() {
     })
   }
   const quit = ()=>{
+    setPu(false)
+    setDisplayLga(false)
     setInfo(data)
     setSearch(true)
   }
-  const searchPu =  async(req,res)=>{
-    
+  const getBack = ()=>{
+    setPu(false)
+    setSearchPu(false)
+    setDisplayLga(true)
+  }
+  const searchForPu =  async(e)=>{
+    e.preventDefault()
+    e.preventDefault()
+    axios({
+      method: 'POST',
+      url: `${url}/utilities/lga/pu`,
+      headers:{
+        Authorization:`Bearer ${token}`
+      },
+      data:info
+    }).then(response =>{
+      console.log(response.data)
+      if(response.data.message === "pu name is required"){
+        info.name = undefined;
+        setInfo(info)
+        return alert("something went wrong")
+      }
+      if(response.data.message ==="pu doest not exist"){
+        return alert("polling unit does not exist")
+      }
+      if(response.data.message ==="successful"){
+        console.log(response.data)
+      }
+    })
+    .catch(error=>{
+      console.log(error);
+    })
+  }
+  const getNext = async ()=>{
+    if(limit){
+      return alert("There are no other polling unit")
+    } 
+    setCount(count +1)
+    console.log(count);
+    axios({
+      method: 'GET',
+      url: `${url}/utilities/lga/pu/${lga.id}?currentPage=${count+1}&pageLimit=10`,
+      headers:{
+        Authorization:`Bearer ${token}`
+      },
+    }).then(response =>{
+      console.log(response.data);
+      if(response.data.message === "No Polling units"){
+        setPuData(response.data.data)
+        setDisplayLga(false)
+        return setPu(true)
+      }
+      if(response.data.message ==="successful"){
+        if(response.data.data.length == 0){
+          setLimit(true)
+          return alert("There are no other polling unit")
+        }
+        setPuData(response.data.data)
+        setDisplayLga(false)
+        return setPu(true);
+      }
+    })
+    .catch(error=>{
+      console.log(error);
+    })
+  }
+  const goBack = async (e)=>{
+    e.preventDefault()
+    setCount(count-1)
+    if(count==0){
+      return alert("this is the first page")
+    }
+    axios({
+      method: 'GET',
+      url: `${url}/utilities/lga/pu/${lga.id}?currentPage=${count-1}&pageLimit=10`,
+      headers:{
+        Authorization:`Bearer ${token}`
+      },
+    }).then(response =>{
+      console.log(response.data);
+      if(response.data.message === "No Polling units"){
+        return alert("There are no other polling unit")
+      }
+      if(response.data.message ==="successful"){
+        setPuData(response.data.data)
+        setDisplayLga(false)
+        return setPu(true);
+      }
+    })
+    .catch(error=>{
+      console.log(error);
+    })
+  }
+  const deletePu = async (e,id)=>{
+    e.preventDefault()
+    axios({
+      method: 'DELETE',
+      url: `${url}/utilities/delete-pu/${id}`,
+      headers:{
+        Authorization:`Bearer ${token}`
+      },
+    }).then(response =>{
+      console.log(response.data);
+      if(response.data.message === "polling unit successfully deleted"){
+        alert("Polling unit deleted")
+        return getPus(e)
+      }
+      if(response.data.message ==="something went wrong"){
+        return alert("something went wrong")
+      }
+    })
+    .catch(error=>{
+      console.log(error);
+    })
   }
   function changeHandler (e){
     const property = e.target.name;
@@ -154,15 +272,64 @@ function RegisterPu() {
                 <button className={style.btnn} onClick={(e)=>{getLga(e)}}>Search</button>
               </div>
             </div>
-            :<div>
-              <button className={style.btn} onClick={(e)=>{quit(e)}}>Back</button>
-              <h3>{lga.name}</h3>
-              <button className={style.btn} onClick={(e)=>{getPus(e)}}>Get polling units</button>
-              <button className={style.btn} onClick={(e)=>{searchPu(e)}}>Search polling Unit</button>
-            </div>
+            :null
         }
         {
+          displayLga?<div>
+          <button className={style.btn} onClick={(e)=>{quit(e)}}>Back</button>
+          <h3>{lga.name}</h3>
+          <button className={style.btn} onClick={(e)=>{getPus(e)}}>Get polling units</button>
+          <button className={style.btn} onClick={(e)=>{setPu(false)
+            setDisplayLga(false)
+            setSearchPu(true)}
+          }>Search polling Unit</button>
+        </div>:null
 
+        }
+        {
+          pu?<div>
+              <button className={style.btn} onClick={(e)=>{getBack(e)}}>Back</button>
+              <div>
+              <button className={style.btn} onClick={()=>{
+                setCreatePu(true)
+                }}>Create Polling Unit</button>
+            </div>
+            {
+              puData.length === 0?
+              <div>
+                There is no polling unit currently
+              </div>:
+              <div> 
+              {
+                puData.map((payload)=>{
+                  return <div>
+                    <p>Name: {payload.name} </p><p>Number: {payload.puNumber}</p><p><p>Polling Units</p>Voters: {payload.voters}</p>
+                    <button className={style.btn} onClick={(e)=>{deletePu(e,payload.id)}}>Delete</button>
+                  </div>
+                })
+              }
+              {
+                count>0?<button className={style.btn} onClick={(e)=>{goBack(e)}}>Back</button>
+                :null
+              }
+              <button className={style.btn} onClick={getNext}>Next</button>
+            </div>
+            }
+          </div>
+          :
+          null
+        }
+        {
+          searchPu?<div>
+            <button className={style.btn} onClick={(e)=>{getBack(e)}}>Back</button>
+            <form>
+              <div className={style.field}>
+              <label>Polling Unit</label>
+              <input className={style.inpu} name="puName" type="text" placeholder="Enter polling unit Name" value={info.puName}  onChange={(e)=>{changeHandler(e)}}  required/><button className={style.btnn} onClick={(e)=>{searchForPu(e)}}>Search</button>
+              </div>
+            </form>
+          </div>
+          :null
         }
       </div>
     </div>

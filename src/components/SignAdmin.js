@@ -97,7 +97,7 @@ function SignAdmin() {
           { signIn?
             <div >
               <div className={styles.formHeading}>
-                <h3>Hello Admin Sign in</h3>
+                <h3>Hello Admin</h3>
                 <p>Sign in your account to continue</p>
               </div>
               <div>
