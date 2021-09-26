@@ -10,14 +10,74 @@
 .header {
   padding-bottom:.4em;
 }
+.field {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.field input {
+  width: 100%;
+  padding: .5em;
+}
 @media (min-width:900px){
   .election {
     margin-left: 7em;
+  }
+  .field {
+    padding-top: .5em;
+    padding-bottom: .5em;
+  }
+  .btn {
+    margin-top: 2em;
+    margin-right: 3em;
+    margin-bottom: 1em;
+    padding: .5em;
+  }
+  .btnn {
+    width: 100%;
+    margin-bottom: 1em;
+    padding: .5em;
+  }
+  .field input {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    padding: .7em;
+    width: 30%;
   }
 }
 
 @media (max-width:900px){
  .election {
     margin-left: 2em;
+  }
+  .field {
+    padding-bottom: 1em;
+  }
+  .field input {
+    margin-top: .5em;
+    margin-bottom: 1em;
+    padding-bottom: .5em;
+    width: 70%;
+  }
+  .inpu {
+    margin-top: 0em;
+    width: 70%;
+    margin-bottom: 1em;
+    padding-bottom: .5em;
+  }
+  .field label {
+    display: block;
+  }
+  .btnn {
+    width: 70%;
+    margin-top: .5em;
+    margin-bottom: 1em;
+    padding: .5em;
+  }
+  .btn {
+    margin-right: 2em;
+    margin-top: .5em;
+    margin-bottom: 1em;
+    padding: .5em;
   }
 }

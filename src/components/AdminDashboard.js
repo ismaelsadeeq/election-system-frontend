@@ -153,6 +153,7 @@ function AdminDashboard() {
   }
   const createElection = (e)=>{
     e.preventDefault()
+    console.log(token);
     if(info.name.length<=0){
       return alert("please enter election name")
     }
@@ -244,7 +245,7 @@ function AdminDashboard() {
     } else {
       linksContainerRef.current.style.height = '0px';
     }
-    
+    setTheToken()
     getElection()
   }, [showLinks,token]);
   return (

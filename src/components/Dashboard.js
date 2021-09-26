@@ -198,20 +198,27 @@ function Dashboard() {
           election?
           <div>
             <h4 className={style.header}>{election.name}</h4>
-            <h4>Submit Result</h4>
+            {!noElection&&submitResult?
+              <h4>Submit Result</h4>
+              :
+              null
+            }
             <form onSubmit={(e)=>{sendResult(e)}}>
               {
                 parties.map((payload)=>{
-                  console.log(payload.name);
                   return (
-                    <div>
+                    <div className={style.field}>
                       <label>{payload.name}</label>
                       <input name={payload.id} type="text" placeholder="Enter Result" value={info.id} onChange={(e)=>{changeHandler(e)}} required></input>
                     </div>
                   )
                 })
               }
-              <button type="submit">Submit</button>
+              {!noElection&&submitResult?
+               <button type="submit" className={style.btn}>Submit</button>
+              :
+              null
+            }
             </form>
           </div>
           :null
