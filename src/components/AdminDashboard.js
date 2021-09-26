@@ -244,7 +244,7 @@ function AdminDashboard() {
     } else {
       linksContainerRef.current.style.height = '0px';
     }
-    setTheToken()
+    
     getElection()
   }, [showLinks,token]);
   return (

@@ -1,0 +1,23 @@
+.election {
+  z-index: -1;
+  position: absolute;
+  top: 5em;
+  display: flex ;
+  flex-direction: column;
+  margin:0 auto;
+  width: 85%;
+}
+.header {
+  padding-bottom:.4em;
+}
+@media (min-width:900px){
+  .election {
+    margin-left: 7em;
+  }
+}
+
+@media (max-width:900px){
+ .election {
+    margin-left: 2em;
+  }
+}

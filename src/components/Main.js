@@ -3,7 +3,7 @@ import {Switch,Route,Redirect} from 'react-router-dom'
 import Home from './Home'
 import Sign from './Sign'
 import SignAdmin from './SignAdmin'
-import Dashboard from '../Dashboard'
+import Dashboard from './Dashboard'
 import AdminDashboard from './AdminDashboard'
 import RegisterPu from './RegisterPu'
 
