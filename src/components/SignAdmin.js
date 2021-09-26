@@ -153,8 +153,8 @@ function SignAdmin() {
                     <input name="password" type="password" placeholder="Password" value={info.password} onChange={(e)=>{changeHandler(e)}} required></input>
                   </div>
                   <div className={styles.field}>
-                    <label >confirm password</label>
-                    <input name="confirmPassword" type="password" placeholder="confirm password" value={info.confirmPassword} onChange={(e)=>{changeHandler(e)}} required></input>
+                    <label >Confirm password</label>
+                    <input name="confirmPassword" type="password" placeholder="Confirm password" value={info.confirmPassword} onChange={(e)=>{changeHandler(e)}} required></input>
                   </div>
                   <button type="submit" className="button btn-success" >Sign up</button>
                   {

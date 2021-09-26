@@ -137,7 +137,7 @@ function Sign() {
             <div >
               <div className={styles.formHeading}>
                 <h3>Sign up</h3>
-                <p>sign up and create a password</p>
+                <p>Sign up and create a password</p>
               </div>
               <div>
                 <form className={styles.formContainer} onSubmit={(e)=>{signUpSubmitHandler(e)}}>
@@ -146,19 +146,19 @@ function Sign() {
                     <input   name="PUNumber" type="text" placeholder="Polling Unit Number" value={info.PUNumber} onChange={(e)=>{changeHandler(e)}} required></input>
                   </div>
                   <div className={styles.field}>
-                  <label >firstname</label>
+                  <label >Firstname</label>
                     <input   name="firstName" type="text" placeholder="first name" value={info.firstName} onChange={(e)=>{changeHandler(e)}} required></input>
                   </div>
                   <div className={styles.field}>
-                  <label >lastname</label>
+                  <label >Lastname</label>
                     <input   name="lastName" type="text" placeholder="last name" value={info.lastName} onChange={(e)=>{changeHandler(e)}} required></input>
                   </div>
                   <div className={styles.field}>
-                    <label >password</label>
+                    <label >Password</label>
                     <input name="password" type="password" placeholder="Password" value={info.password} onChange={(e)=>{changeHandler(e)}} required></input>
                   </div>
                   <div className={styles.field}>
-                    <label >confirm password</label>
+                    <label >Confirm password</label>
                     <input name="confirmPassword" type="password" placeholder="confirm password" value={info.confirmPassword} onChange={(e)=>{changeHandler(e)}} required></input>
                   </div>
                   <button type="submit" className="button btn-success" >Sign up</button>

@@ -369,7 +369,7 @@ function AdminDashboard() {
                     <input name="bottomName" type="text" placeholder="Assistant Contestant" value={info.bottomName} onChange={(e)=>{changeHandler(e)}} ></input>
                     </div>
                     <div className={style.field}>
-                    <button type="submit" className={style.btnn} onClick={(e)=>{created(e)}}>Create Party</button>
+                    <button type="submit" className={style.btn} onClick={(e)=>{created(e)}}>Create Party</button>
                     </div>
                   </div>
                   :null
