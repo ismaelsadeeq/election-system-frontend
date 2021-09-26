@@ -323,7 +323,6 @@ function RegisterPu() {
             setSearchPu(true)}
           }>Search polling Unit</button>
         </div>:null
-
         }
         {
           pu?<div>
