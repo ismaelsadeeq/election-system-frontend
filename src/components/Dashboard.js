@@ -198,7 +198,7 @@ function Dashboard() {
           election?
           <div>
             <h4 className={style.header}>{election.name}</h4>
-            {!noElection&&submitResult?
+            {!noElection&&!submitResult?
               <h4>Submit Result</h4>
               :
               null
@@ -214,11 +214,10 @@ function Dashboard() {
                   )
                 })
               }
-              {!noElection&&submitResult?
+              {!noElection&&!submitResult?
                <button type="submit" className={style.btn}>Submit</button>
               :
-              null
-            }
+              null}
             </form>
           </div>
           :null
@@ -226,7 +225,7 @@ function Dashboard() {
         {
           noElection?
           <div>
-              <p>Oops there is no Election currently currently at the moment</p>
+              <p>Oops there is no election currently at the moment</p>
            </div>:
           null
         }
