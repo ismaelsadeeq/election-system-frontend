@@ -40,7 +40,7 @@
 }
 .page {
   color:var(--clr-grey-2);
-  width: 98%;
+  width: 100%;
   z-index: -1;
   position: absolute;
   top: 5em;
@@ -51,6 +51,9 @@
 }
 .image {
   width: 100%;
+}
+.image2 {
+  width: 30%;
 }
 .container {
   display: flex;
@@ -68,7 +71,7 @@
     padding-top: .5em;
     display: flex;
     margin: 0 auto;
-    width: 83%;
+    width: 100%;
     text-align: center;
   }
 }
@@ -77,6 +80,8 @@
     padding-top: .5em;
     display: flex;
     margin: 0 auto;
-    width: 90%;
+    width: 100%;
+  } .image2 {
+    width: 30%;
   }
 }

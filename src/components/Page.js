@@ -1,5 +1,6 @@
 import React,{useState,useEffect} from 'react'
-import logo from '../assets/images/inec2.jpeg'
+import logo from '../assets/images/nacoss.jpg'
+import logo2 from '../assets/images/poly.jpg'
 import styles from './stylesheets/page.module.css'
 import axios from "axios";
 import {url} from './url';
@@ -44,11 +45,12 @@ function Page() {
     <div className={styles.page}>
       <div className={styles.container}>
         <div >
-          <img className={styles.image} src={logo} alt="inec nigeria logo"></img>
+          <img className={styles.image2} src={logo} alt="inec nigeria logo"></img>
+          <img className={styles.image2} src={logo2} alt="inec nigeria logo"></img>
         </div>
         <div>
           <h3 className={styles.heading}>
-          Independent National Electoral Commission Adamawa State Nigeria
+          Adamawa State Nigeria Election System
           </h3>
         </div>
       </div>
